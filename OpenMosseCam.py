@@ -105,6 +105,9 @@ whiteBalanceGainBLUE = 0.9
 settings = ["iso", "shutterSpeed", "whiteBalance", "displayInfo", "fileFormat", "imageEffect", "WB RED gains", "WB BLUE gains"]
 currentSettingIndexInt = 0  # saves the current editable setting
 
+# Menu selection char list
+highlightBracketList = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"]
+
 # Buttons
 button1 = Button(17)  # used as shutter button, runs capture function
 button2 = Button(22)  # used as "next/up" button, moves setting to the previous option in settings list
@@ -128,101 +131,57 @@ def shutter_button_press():
 def make_overlaystring_with_WB():
     global currentSettingIndexInt
     global overlayString
+    global  highlightBracketList
 
-    if currentSettingIndexInt == 0:
-        overlayString = '|| [ISO: ' + str(iso[isoIndex]) + "] || \n ||  speed: " + str(
-            shutterSpeedTranslation[shutterSpeedIndex]) + "  || \n ||  AWB: " + str(
-            whiteBalance[whiteBalanceIndex]) + "  || \n ||  info: " + str(
-            displayInfo) + "  || \n ||  format: " + str(fileFormat[fileformatIndex]) + "  || \n ||  effect: " + str(
-            imageEffect[imageEffectIndex]) + "  ||" + "\n||  RED gain: " + str(round(whiteBalanceGainRED, 2)) + "  ||\n  ||  BLUE gain: " + str(round(whiteBalanceGainBLUE, 2)) + "  ||"
+    for i in range(16):
+        if currentSettingIndexInt * 2 == i:
+            highlightBracketList[i] = "["
+        elif currentSettingIndexInt * 2 + 1 == i:
+            highlightBracketList[i] = "]"
+        else:
+            highlightBracketList[i] = " "
 
-    elif currentSettingIndexInt == 1:
-        overlayString = '||  ISO: ' + str(iso[isoIndex]) + "  || \n || [speed: " + str(
-            shutterSpeedTranslation[shutterSpeedIndex]) + "] || \n ||  AWB: " + str(
-            whiteBalance[whiteBalanceIndex]) + "  || \n ||  info: " + str(
-            displayInfo) + "  || \n ||  format: " + str(fileFormat[fileformatIndex]) + "  || \n ||  effect: " + str(
-            imageEffect[imageEffectIndex]) + "  ||" + "\n||  RED gain: " + str(round(whiteBalanceGainRED, 2)) + "  ||\n  ||  BLUE gain: " + str(round(whiteBalanceGainBLUE, 2)) + "  ||"
-    elif currentSettingIndexInt == 2:
-        overlayString = ' || ISO: ' + str(iso[isoIndex]) + "  || \n ||  speed: " + str(
-            shutterSpeedTranslation[shutterSpeedIndex]) + "  || \n || [AWB: " + str(
-            whiteBalance[whiteBalanceIndex]) + "] || \n ||  info: " + str(
-            displayInfo) + "  || \n ||  format: " + str(fileFormat[fileformatIndex]) + "  || \n ||  effect: " + str(
-            imageEffect[imageEffectIndex]) + "  ||" + "\n||  RED gain: " + str(round(whiteBalanceGainRED, 2)) + "  ||\n  ||  BLUE gain: " + str(round(whiteBalanceGainBLUE, 2)) + "  ||"
-    elif currentSettingIndexInt == 3:
-        overlayString = ' || ISO: ' + str(iso[isoIndex]) + "  || \n ||  speed: " + str(
-            shutterSpeedTranslation[shutterSpeedIndex]) + "  || \n ||  AWB: " + str(
-            whiteBalance[whiteBalanceIndex]) + "  || \n || [info: " + str(
-            displayInfo) + "] || \n ||  format: " + str(fileFormat[fileformatIndex]) + "  || \n ||  effect: " + str(
-            imageEffect[imageEffectIndex]) + "  ||" + "\n||  RED gain: " + str(round(whiteBalanceGainRED, 2)) + "  ||\n  ||  BLUE gain: " + str(round(whiteBalanceGainBLUE, 2)) + "  ||"
-    elif currentSettingIndexInt == 4:
-        overlayString = ' || ISO: ' + str(iso[isoIndex]) + "  || \n ||  speed: " + str(
-            shutterSpeedTranslation[shutterSpeedIndex]) + "  || \n ||  AWB: " + str(
-            whiteBalance[whiteBalanceIndex]) + "  || \n ||  info: " + str(
-            displayInfo) + "  || \n || [format: " + str(fileFormat[fileformatIndex]) + "] || \n ||  effect: " + str(
-            imageEffect[imageEffectIndex]) + "  ||" + "\n||  RED gain: " + str(round(whiteBalanceGainRED, 2)) + "  ||\n  ||  BLUE gain: " + str(round(whiteBalanceGainBLUE, 2)) + "  ||"
-    elif currentSettingIndexInt == 5:
-        overlayString = ' || ISO: ' + str(iso[isoIndex]) + "  || \n ||  speed: " + str(
-            shutterSpeedTranslation[shutterSpeedIndex]) + "  || \n ||  AWB: " + str(
-            whiteBalance[whiteBalanceIndex]) + "  || \n ||  info: " + str(
-            displayInfo) + "  || \n ||  format: " + str(fileFormat[fileformatIndex]) + "  || \n || [effect: " + str(
-            imageEffect[imageEffectIndex]) + "] ||" + "\n||  RED gain: " + str(round(whiteBalanceGainRED, 2)) + "  ||\n  ||  BLUE gain: " + str(round(whiteBalanceGainBLUE, 2)) + "  ||"
-    elif currentSettingIndexInt == 6:
-        overlayString = ' || ISO: ' + str(iso[isoIndex]) + "  || \n ||  speed: " + str(
-            shutterSpeedTranslation[shutterSpeedIndex]) + "  || \n ||  AWB: " + str(
-            whiteBalance[whiteBalanceIndex]) + "  || \n ||  info: " + str(
-            displayInfo) + "  || \n ||  format: " + str(fileFormat[fileformatIndex]) + "  || \n ||  effect: " + str(
-            imageEffect[imageEffectIndex]) + "  ||" + "\n|| [RED gain: " + str(round(whiteBalanceGainRED, 2)) + "] ||\n  ||  BLUE gain: " + str(round(whiteBalanceGainBLUE, 2)) + "  ||"
-    elif currentSettingIndexInt == 7:
-        overlayString = ' || ISO: ' + str(iso[isoIndex]) + "  || \n ||  speed: " + str(
-            shutterSpeedTranslation[shutterSpeedIndex]) + "  || \n ||  AWB: " + str(
-            whiteBalance[whiteBalanceIndex]) + "  || \n ||  info: " + str(
-            displayInfo) + "  || \n ||  format: " + str(fileFormat[fileformatIndex]) + "  || \n ||  effect: " + str(
-            imageEffect[imageEffectIndex]) + "  ||" + "\n||  RED gain: " + str(round(whiteBalanceGainRED, 2)) + "  ||\n  || [BLUE gain: " + str(round(whiteBalanceGainBLUE, 2)) + "] ||"
-    else:
-        print("error: current setting index is out of defined range")
+    overlayString = " || " + highlightBracketList[0] + "ISO: " + str(iso[isoIndex]) + highlightBracketList[1] + \
+                    " || \n || " + highlightBracketList[2] + "speed: " + str(
+        shutterSpeedTranslation[shutterSpeedIndex]) + highlightBracketList[3] + \
+                    " || \n || " + highlightBracketList[4] + "AWB: " + str(whiteBalance[whiteBalanceIndex]) + \
+                    highlightBracketList[5] + \
+                    " || \n || " + highlightBracketList[6] + "info: " + str(displayInfo) + highlightBracketList[7] + \
+                    " || \n || " + highlightBracketList[8] + "format: " + str(fileFormat[fileformatIndex]) + \
+                    highlightBracketList[9] + \
+                    " || \n || " + highlightBracketList[10] + "effect: " + str(imageEffect[imageEffectIndex]) + \
+                    highlightBracketList[11] + \
+                    " || \n || " + highlightBracketList[12] + "RED gain: " + str(round(whiteBalanceGainRED, 2)) + \
+                    highlightBracketList[13] + \
+                    " || \n || " + highlightBracketList[14] + "BLUE gain: " + str(round(whiteBalanceGainBLUE, 2)) + \
+                    highlightBracketList[15] + \
+                    "  ||"
 
 
 def make_overlaystring_no_WB():
     global currentSettingIndexInt
     global overlayString
-    if currentSettingIndexInt == 0:
-        overlayString = '|| [ISO: ' + str(iso[isoIndex]) + "] || \n ||  speed: " + str(
-            shutterSpeedTranslation[shutterSpeedIndex]) + "  || \n ||  AWB: " + str(
-            whiteBalance[whiteBalanceIndex]) + "  || \n ||  info: " + str(
-            displayInfo) + "  || \n ||  format: " + str(fileFormat[fileformatIndex]) + "  || \n ||  effect: " + str(
-            imageEffect[imageEffectIndex]) + "  ||"
-    elif currentSettingIndexInt == 1:
-        overlayString = '||  ISO: ' + str(iso[isoIndex]) + "  || \n || [speed: " + str(
-            shutterSpeedTranslation[shutterSpeedIndex]) + "] || \n ||  AWB: " + str(
-            whiteBalance[whiteBalanceIndex]) + "  || \n ||  info: " + str(
-            displayInfo) + "  || \n ||  format: " + str(fileFormat[fileformatIndex]) + "  || \n ||  effect: " + str(
-            imageEffect[imageEffectIndex]) + "  ||"
-    elif currentSettingIndexInt == 2:
-        overlayString = ' || ISO: ' + str(iso[isoIndex]) + "  || \n ||  speed: " + str(
-            shutterSpeedTranslation[shutterSpeedIndex]) + "  || \n || [AWB: " + str(
-            whiteBalance[whiteBalanceIndex]) + "] || \n ||  info: " + str(
-            displayInfo) + "  || \n ||  format: " + str(fileFormat[fileformatIndex]) + "  || \n ||  effect: " + str(
-            imageEffect[imageEffectIndex]) + "  ||"
-    elif currentSettingIndexInt == 3:
-        overlayString = ' || ISO: ' + str(iso[isoIndex]) + "  || \n ||  speed: " + str(
-            shutterSpeedTranslation[shutterSpeedIndex]) + "  || \n ||  AWB: " + str(
-            whiteBalance[whiteBalanceIndex]) + "  || \n || [info: " + str(
-            displayInfo) + "] || \n ||  format: " + str(fileFormat[fileformatIndex]) + "  || \n ||  effect: " + str(
-            imageEffect[imageEffectIndex]) + "  ||"
-    elif currentSettingIndexInt == 4:
-        overlayString = ' || ISO: ' + str(iso[isoIndex]) + "  || \n ||  speed: " + str(
-            shutterSpeedTranslation[shutterSpeedIndex]) + "  || \n ||  AWB: " + str(
-            whiteBalance[whiteBalanceIndex]) + "  || \n ||  info: " + str(
-            displayInfo) + "  || \n || [format: " + str(fileFormat[fileformatIndex]) + "] || \n ||  effect: " + str(
-            imageEffect[imageEffectIndex]) + "  ||"
-    elif currentSettingIndexInt == 5:
-        overlayString = ' || ISO: ' + str(iso[isoIndex]) + "  || \n ||  speed: " + str(
-            shutterSpeedTranslation[shutterSpeedIndex]) + "  || \n ||  AWB: " + str(
-            whiteBalance[whiteBalanceIndex]) + "  || \n ||  info: " + str(
-            displayInfo) + "  || \n ||  format: " + str(fileFormat[fileformatIndex]) + "  || \n || [effect: " + str(
-            imageEffect[imageEffectIndex]) + "] ||"
-    else:
-        print("error: current setting index is out of defined range")
+    global highlightBracketList
+
+    for i in range(16):
+        if currentSettingIndexInt * 2 == i:
+            highlightBracketList[i] = "["
+        elif currentSettingIndexInt * 2 + 1 == i:
+            highlightBracketList[i] = "]"
+        else:
+            highlightBracketList[i] = " "
+
+    overlayString = " || " + highlightBracketList[0] + "ISO: " + str(iso[isoIndex]) + highlightBracketList[1] + \
+                    " || \n || " + highlightBracketList[2] + "speed: " + str(
+        shutterSpeedTranslation[shutterSpeedIndex]) + highlightBracketList[3] + \
+                    " || \n || " + highlightBracketList[4] + "AWB: " + str(whiteBalance[whiteBalanceIndex]) + \
+                    highlightBracketList[5] + \
+                    " || \n || " + highlightBracketList[6] + "info: " + str(displayInfo) + highlightBracketList[7] + \
+                    " || \n || " + highlightBracketList[8] + "format: " + str(fileFormat[fileformatIndex]) + \
+                    highlightBracketList[9] + \
+                    " || \n || " + highlightBracketList[10] + "effect: " + str(imageEffect[imageEffectIndex]) + \
+                    highlightBracketList[11] + \
+                    "  ||"
 
 
 def update_settings_overlay_display():
