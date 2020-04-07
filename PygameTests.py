@@ -3,9 +3,7 @@ import os
 from time import sleep
 import RPi.GPIO as GPIO
 
-support_gpio = True
-
-# Note #21 changed to #27 for rev2 Pi
+# set up dictionary where keys are GPIO button numbers)
 button_map = {23: (255, 0, 0), 22: (0, 255, 0), 27: (0, 0, 255), 17: (0, 0, 0)}
 
 # Setup the GPIOs as inputs with Pull Ups since the buttons are connected to GND
@@ -24,6 +22,8 @@ lcd.fill((0, 0, 0))
 pygame.display.update()
 
 font_big = pygame.font.Font(None, 100)
+
+# Classes go here, before the while loop.
 
 while True:
     # Scan the buttons

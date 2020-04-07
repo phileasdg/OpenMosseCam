@@ -3,6 +3,8 @@
 # picamera has been modified to include the greyworld awb setting.
 # When awb mode == 'off', default values for R&B gains are 9.0, 9.0
 
+# TODO: Make it work with pygame
+# TODO: Implement the option to switch between windowed mode and not windowed mode.
 # TODO: implement touch screen and overlays using PyGame or PyOpenGL or NumPy or OpenCV or Pietro's recommendation.
 # TODO: MAKE IT POSSIBLE TO CHANGE GAINS TO SECOND DECIMAL POINT
 
@@ -90,7 +92,7 @@ imageEffect = ['none', 'negative', 'solarize', 'hatch', 'gpen', 'film', 'colorsw
 # 'pastel', 'watercolor', 'film', 'blur', 'saturation', 'colorswap', 'washedout', 'posterise', 'colorpoint',
 # 'colorbalance', 'cartoon', 'deinterlace1', 'deinterlace2'
 
-
+# TODO: This can be made a list or (preferably) a dictionary
 # Settings lists index recorders and reference
 isoIndex = 0  # type: int
 shutterSpeedIndex = 0  # type: int
