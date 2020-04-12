@@ -1,5 +1,6 @@
 # TODO: Make GUI and tie RPI GPIO buttons
 # TODO: figure out a way to make the test resize to stay in frame or move to be in frame
+# TODO: format text so that if it doesn't fit into the screen on one line it splits into multiple lines automatically.
 
 import pygame
 import sys

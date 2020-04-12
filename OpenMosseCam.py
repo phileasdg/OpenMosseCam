@@ -5,7 +5,7 @@
 
 # TODO: Make it work with pygame
 # TODO: Implement the option to switch between windowed mode and not windowed mode.
-# TODO: implement touch screen and overlays using PyGame or PyOpenGL or NumPy or OpenCV or Pietro's recommendation.
+# TODO: implement overlays using PyGame or PyOpenGL or NumPy or OpenCV.
 # TODO: MAKE IT POSSIBLE TO CHANGE GAINS TO SECOND DECIMAL POINT
 
 # TODO : implement RAW + Jpeg save option (also, figure out how raw files work with PiCam)
