@@ -51,8 +51,8 @@ def draw_settings_menu():
     pygame.draw.line(DISPLAYSURF, WHITE, (a+2*horizontalThird, a), (a+2*horizontalThird, a+2*verticalThird), lineThickness)  # point A, point B, thickness
 
     # display text settings headers
-    fontObjHeaders = pygame.font.Font("freesansbold.ttf", int(widthOfFrame/18))  # font, font size TODO: figure out formula for font size
-    # TODO: sfontObjSettings = pygame.font.Font("freesansbold.ttf", int(widthOfFrame/18))  # font, font size TODO: figure out formula for font size
+    fontObjHeaders = pygame.font.Font("freesansbold.ttf", int(widthOfFrame/18))  # font, font size
+    fontObjSettings = pygame.font.Font("freesansbold.ttf", int(widthOfFrame/9))  # font, font size
 
     for k, v in settingsXY.items():
         k = fontObjHeaders.render(k, True, WHITE)  # text, anti-aliasing, text colour, bg colour
@@ -60,6 +60,14 @@ def draw_settings_menu():
         textRectObj.topleft = (v)
 
         DISPLAYSURF.blit(k, textRectObj)
+
+        ValueString = fontObjSettings.render("value", True, WHITE)  # TODO: Make this text flow from the camera settings.
+        ValueStringtextRectObj = ValueString.get_rect()
+        ValueStringXYtoSum = [(0, 35), v]  # TODO: Make this a formula
+        ValueStringXY = [sum(i) for i in zip(*ValueStringXYtoSum)]
+        ValueStringtextRectObj.topleft = (ValueStringXY)
+
+        DISPLAYSURF.blit(ValueString, ValueStringtextRectObj)
 
 # setup functions calling
 draw_settings_menu()
