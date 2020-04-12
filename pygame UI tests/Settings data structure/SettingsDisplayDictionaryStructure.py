@@ -8,8 +8,8 @@ AWBmodeSetting = "greyworld"
 REDwhiteBalanceGain = "0.0"
 BluewhiteBalanceGain = "0.0"
 
-settingsDictionary = {
-    "ISO": ISOsetting,
+settingsFetcherDictionary = {
+    "ISO": ISOsetting, # v can be a list
     "Shutter": shutterSetting,
     "Mode": modeSetting,
     "Effect": effectSetting,
@@ -20,9 +20,9 @@ settingsDictionary = {
     "Blue:": BluewhiteBalanceGain
 }
 
-for k, v in settingsDictionary.items():
+settingsList = ["ISO", "Shutter", "Mode", "Effect", "Format", "Resolution", "AWB", "Red:", "Blue:"]
+for i in settingsList:
+    print(settingsFetcherDictionary[i])
 
-    print(k, v)
-    k = fontObj.render(v), True, GREEN)  # text, anti-aliasing, text colour, bg colour
-    textRectObj = k.get_rect()
-    textRectObj.topleft = (a, a)
+# for k, v in settingsDictionary.items():
+#     print(k, v)
