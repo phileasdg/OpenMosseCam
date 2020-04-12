@@ -19,9 +19,10 @@ fontSize = 20
 lineThickness = int(a/2)
 
 # Colours
-BACKGROUND= (0, 150, 0)
+BACKGROUND= (150, 0, 150)
 WHITE = (255, 255, 255)
 
+# settings headers coordinates
 settingsXY = {
     "ISO": (a+lineThickness, a+lineThickness),
     "Shutter": (a+lineThickness+horizontalThird, a+lineThickness),
@@ -50,10 +51,11 @@ def draw_settings_menu():
     pygame.draw.line(DISPLAYSURF, WHITE, (a+2*horizontalThird, a), (a+2*horizontalThird, a+2*verticalThird), lineThickness)  # point A, point B, thickness
 
     # display text settings headers
-    fontObj = pygame.font.Font("freesansbold.ttf", 40)  # font, font size TODO: figure out formula for font size
+    fontObjHeaders = pygame.font.Font("freesansbold.ttf", int(widthOfFrame/18))  # font, font size TODO: figure out formula for font size
+    # TODO: sfontObjSettings = pygame.font.Font("freesansbold.ttf", int(widthOfFrame/18))  # font, font size TODO: figure out formula for font size
 
     for k, v in settingsXY.items():
-        k = fontObj.render(k, True, WHITE)  # text, anti-aliasing, text colour, bg colour
+        k = fontObjHeaders.render(k, True, WHITE)  # text, anti-aliasing, text colour, bg colour
         textRectObj = k.get_rect()
         textRectObj.topleft = (v)
 
