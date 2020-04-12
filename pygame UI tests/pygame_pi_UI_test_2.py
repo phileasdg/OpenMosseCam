@@ -76,9 +76,7 @@ ISOtextSurfaceObj = fontObj.render("ISO", True, WHITE)  # text, anti-aliasing, t
 ISOtextRectObj = ISOtextSurfaceObj.get_rect()
 ISOtextRectObj.topleft = (a+lineThickness, a+lineThickness)
 
-ShutterTextSurfaceObj = fontObj.render("Shutter", True, WHITE)  # text, anti-aliasing, text colour, bg colour
-ShutterTextRectObj = ShutterTextSurfaceObj.get_rect()
-ShutterTextRectObj.topleft = (a+horizontalThird+lineThickness, a+lineThickness)
+
 
 # fontObj = pygame.font.Font("freesansbold.ttf", fontSize)  # font, font size
 # textSurfaceObj = fontObj.render(overlayString, True, WHITE)
@@ -92,7 +90,6 @@ ShutterTextRectObj.topleft = (a+horizontalThird+lineThickness, a+lineThickness)
 
 while True:  # main game loop
     DISPLAYSURF.blit(ISOtextSurfaceObj, ISOtextRectObj)
-    DISPLAYSURF.blit(ShutterTextSurfaceObj, ShutterTextRectObj)
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
