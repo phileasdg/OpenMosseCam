@@ -30,24 +30,30 @@ def back():
 
     # change the value of the buttons
 def next_up():
-    # adds one to setting index value if value is in range 0 to list length
-    if 0 <= scvil[csi] < len(sd[sl[csi]])-1:  # note the "-1", it is important.
-        scvil[csi] += 1
-    # sets setting index value to 0
-    else:
-        scvil[csi] = 0
+    if currentDisplay == "settingsMenu":
+        # adds one to setting index value if value is in range 0 to list length
+        if 0 <= scvil[csi] < len(sd[sl[csi]])-1:  # note the "-1", it is important.
+            scvil[csi] += 1
+        # sets setting index value to 0
+        else:
+            scvil[csi] = 0
 
-    print("you have pressed 'up'")
-    print(sl[csi]+" = "+str(sd[sl[csi]][scvil[csi]]))
-    # add 1 to setting value
+        print("you have pressed 'up'")
+        print(sl[csi]+" = "+str(sd[sl[csi]][scvil[csi]]))
+        # add 1 to setting value
+    else:  # can only be called from the gallery
+        print("next picture up")
 def next_down():
-    if 0 < scvil[csi] <= (len(sd[sl[csi]])):
-        scvil[csi] -= 1
-    else:
-        scvil[csi] = len(sd[sl[csi]])-1
+    if currentDisplay == "settingsMenu":
+        if 0 < scvil[csi] <= (len(sd[sl[csi]])):
+            scvil[csi] -= 1
+        else:
+            scvil[csi] = len(sd[sl[csi]])-1
 
-    print("you have pressed 'down'")
-    print(sl[csi] + " = " + str(sd[sl[csi]][scvil[csi]]))
+        print("you have pressed 'down'")
+        print(sl[csi] + " = " + str(sd[sl[csi]][scvil[csi]]))
+    else: # can only be called from the gallery
+        print("next picture down")
 def change_setting():
     global csi
     if 0 <= csi <8:  # between 0 and highest index in settingsList (8 for now)
