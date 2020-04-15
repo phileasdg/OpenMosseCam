@@ -41,7 +41,13 @@ def next_up():
     print(sl[csi]+" = "+str(sd[sl[csi]][scvil[csi]]))
     # add 1 to setting value
 def next_down():
-    pass # TODO Make it work and solve the exception.
+    if 0 < scvil[csi] <= (len(sd[sl[csi]])):
+        scvil[csi] -= 1
+    else:
+        scvil[csi] = len(sd[sl[csi]])-1
+
+    print("you have pressed 'down'")
+    print(sl[csi] + " = " + str(sd[sl[csi]][scvil[csi]]))
 def change_setting():
     global csi
     if 0 <= csi <8:  # between 0 and highest index in settingsList (8 for now)
