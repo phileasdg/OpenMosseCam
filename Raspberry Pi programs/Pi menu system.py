@@ -1,3 +1,5 @@
+import
+
 # Global variables
 infoOverlay = True
 currentDisplay = "viewFinder"
@@ -66,7 +68,7 @@ def delete():
     print("content deleted")
 
 # Dictionaries and lists (camera settings and UI)
-displays = {
+displayFunctions = {
     "viewFinder": {
         "Button1": take_picture,  # the name of the function without the brackets
         "Button2": toggle_info,
@@ -85,8 +87,8 @@ displays = {
         "Button3": next_down,
         "Button4": delete
     }
-}
-displayFunctions = {
+}  # contains map of functions and their button assignment for different displays
+displayDescriptions = {
     "viewFinder": {
         "Button1": "1: take_picture",  # the name of the function without the brackets
         "Button2": "2: toggle_info",
@@ -105,7 +107,7 @@ displayFunctions = {
         "Button3": "3: next_down",
         "Button4": "4: delete"
     }
-}
+}  # primarily for dev purposes: reference dict of the descriptions of btn functions to print
 
 # settings list
 sl = ["ISO", "Shutter", "Mode", "Effect", "Format", "Resolution", "AWB", "Red gain", "Blue gain"]
@@ -138,8 +140,8 @@ while True:
 
     # button function descriptions print
     for i in range(4):
-        print(displayFunctions[currentDisplay]["Button" + str(i + 1)])
+        print(displayDescriptions[currentDisplay]["Button" + str(i + 1)])
 
     # take user input and run function accordingly
     print("please enter a number:")
-    displays[currentDisplay]["Button" + input()]()
+    displayFunctions[currentDisplay]["Button" + input()]()
