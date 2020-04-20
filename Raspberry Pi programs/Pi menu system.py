@@ -1,16 +1,10 @@
-# import RPi.GPIO as GPIO
-# from time import sleep
-#
-# buttons = {1: 17, 2: 22, 3: 23, 4: 27}
-# GPIO.setmode(GPIO.BCM)
-# for v in buttons.values():
-#     GPIO.setup(v, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-#
-# while True:
-#     for k, v in buttons.items():
-#         if GPIO.input(v) == False:
-#             print("button " + str(k) + " pressed")
-#             sleep(0.3)
+import RPi.GPIO as GPIO
+from time import sleep
+
+buttons = {1: 17, 2: 22, 3: 23, 4: 27}
+GPIO.setmode(GPIO.BCM)
+for v in buttons.values():
+    GPIO.setup(v, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 # Global variables
 infoOverlay = True
@@ -78,6 +72,11 @@ def change_setting():
     # go down to change the setting
 def delete():
     print("content deleted")
+def update_display():
+    # button function descriptions print
+    for i in range(4):
+        print(displayDescriptions[currentDisplay]["Button" + str(i + 1)])
+    print("please press a button:")
 
 # Dictionaries and lists (camera settings and UI)
 displayFunctions = {
@@ -161,12 +160,13 @@ scvil = [
     0   # Blue gain value = value between 1 and 9
 ]
 
+# Program
+update_display()
+
 while True:
-
-    # button function descriptions print
-    for i in range(4):
-        print(displayDescriptions[currentDisplay]["Button" + str(i + 1)])
-
-    # take user input and run function accordingly
-    print("please enter a number:")
-    displayFunctions[currentDisplay]["Button" + input()]()
+    for k, v in buttons.items():
+        if GPIO.input(v) == False:
+            print("button " + str(k) + " pressed")
+            displayFunctions[currentDisplay]["Button"+str(k)]()
+            update_display()
+            sleep(0.3)
