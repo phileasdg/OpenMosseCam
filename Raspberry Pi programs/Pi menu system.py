@@ -1,4 +1,16 @@
-import
+# import RPi.GPIO as GPIO
+# from time import sleep
+#
+# buttons = {1: 17, 2: 22, 3: 23, 4: 27}
+# GPIO.setmode(GPIO.BCM)
+# for v in buttons.values():
+#     GPIO.setup(v, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+#
+# while True:
+#     for k, v in buttons.items():
+#         if GPIO.input(v) == False:
+#             print("button " + str(k) + " pressed")
+#             sleep(0.3)
 
 # Global variables
 infoOverlay = True
@@ -113,15 +125,28 @@ displayDescriptions = {
 sl = ["ISO", "Shutter", "Mode", "Effect", "Format", "Resolution", "AWB", "Red gain", "Blue gain"]
 # settings dictionary
 sd = {
-    "ISO": [100, 200, 300],  # limited number of values
-    "Shutter": [(1, 100), (2, 200), (3,300)],  # values seen by user and values read by program are different
+    "ISO": [0, 100, 160, 200, 250, 320, 400, 500, 640, 800],  # limited number of values
+    "Shutter": [("auto", 0), ("1/8000", 125), ("1/6400", 156), ("1/5000", 200), ("1/4000", 250), ("1/3200", 312),
+                ("1/2500", 400), ("1/2000", 500), ("1/1600", 625), ("1/1250", 800), ("1/1000", 1000), ("1/800", 1250),
+                ("1/640", 1562), ("1/500", 2000), ("1/400", 2500), ("1/320", 3125), ("1/250", 4000), ("1/200", 5000),
+                ("1/160", 6250), ("1/125", 8000), ("1/100", 10000), ("1/80", 12500), ("1/60", 16666), ("1/50", 20000),
+                ("1/40", 25000), ("1/30", 33333), ("1/25", 40000), ("1/20", 50000), ("1/15", 66666), ("1/13", 76923),
+                ("1/10", 100000), ("1/8", 125000), ("1/6", 166666), ("1/5", 200000), ("1/4", 250000), ("0.3", 300000),
+                ("0.4", 400000), ("0.5", 500000), ("0.6", 600000), ("0.8", 800000), ("1", 1000000), ("1.3", 1300000),
+                ("1.6", 1600000), ("2", 2000000), ("2.5", 2500000), ("3.2", 3200000), ("4", 4000000), ("5", 5000000),
+                ("6", 6000000)],  # values seen by user and values read by program are different
     "Mode": ["photo", "video"], # only two modes, could be tied to a boolean
-    "Effect": ["none", "negative"],  # limited number of values
+    "Effect": ["none", "negative", "solarize", "hatch", "gpen", "film", "colorswap", "washedout",
+               "colorbalance", "cartoon"],  # limited number of values
+    # effects availablee: 'none', 'negative', 'solarize', 'sketch', 'denoise', 'emboss', 'oilpaint', 'hatch', 'gpen',
+    # 'pastel', 'watercolor', 'film', 'blur', 'saturation', 'colorswap', 'washedout', 'posterise', 'colorpoint',
+    # 'colorbalance', 'cartoon', 'deinterlace1', 'deinterlace2'
     "Format": ["jpg", "png"],  # limited number of values
     "Resolution": [(1980, 1080), (1080, 720)],  # limited number of tuples, different
-    "AWB": ["auto", "greyworld", "off"],
+    "AWB": ["off", "greyworld", "auto", "sunlight", "cloudy", "shade", "tungsten", "fluorescent", "incandescent", "flash", "horizon"],
     "Red gain:": 0,
-    "Blue gain:": 0
+    "Blue gain:": 0,
+    "Active Camera(s)": ["left camera", "right camera", "stereo"]
 }
 # settings current value index list
 scvil = [
