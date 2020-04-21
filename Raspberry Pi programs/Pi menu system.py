@@ -1,3 +1,5 @@
+# TODO: update all the comments and dependencies when the code is finished and make sure it is all correct.
+
 import RPi.GPIO as GPIO
 from time import sleep
 
@@ -64,7 +66,7 @@ def next_down():
         print("next picture down")
 def change_setting():
     global csi
-    if 0 <= csi <8:  # between 0 and highest index in settingsList (8 for now)
+    if 0 <= csi < 9:  # between 0 and highest index in settingsList (9 for now)
         csi += 1
     else:
         csi = 0
@@ -121,7 +123,7 @@ displayDescriptions = {
 }  # primarily for dev purposes: reference dict of the descriptions of btn functions to print
 
 # settings list
-sl = ["ISO", "Shutter", "Mode", "Effect", "Format", "Resolution", "AWB", "Red gain", "Blue gain"]
+sl = ["ISO", "Shutter", "Mode", "Effect", "Format", "Resolution", "AWB", "Red gain", "Blue gain", "Active Camera(s)"]
 # settings dictionary
 sd = {
     "ISO": [0, 100, 160, 200, 250, 320, 400, 500, 640, 800],  # limited number of values
@@ -164,7 +166,8 @@ scvil = [
     0,  # Resolution index from list of tuples [(x, y),(x, y), ...]
     0,  # AWB index from list of strings
     0,  # Red gain value = value between 1 and 9
-    0   # Blue gain value = value between 1 and 9
+    0,  # Blue gain value = value between 1 and 9
+    0   # Active Camera index from list of strings
 ]
 
 # Program
