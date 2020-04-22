@@ -1,3 +1,5 @@
+# Opens an image, displays it in a window and saves it to a new file when the user presses a key on the keyboard
+
 import cv2 as cv
 import sys
 
