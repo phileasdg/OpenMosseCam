@@ -1,32 +1,10 @@
 # TODO: Make a program that sets and sets every possible setting for a camera once and takes one short photo and video
+# TODO: scavenge and scrap this code to make the following:
+# - fullscreen camera display that fits on the pitft
+# - allows overlays either in opencv or pygame (test it)
 
-# Copyright (C) 2019 Eugene a.k.a. Realizator, stereopi.com, virt2real team
-#
-# This file is part of StereoPi tutorial scripts.
-#
-# StereoPi tutorial is free software: you can redistribute it
-# and/or modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation, either version 3 of the
-# License, or (at your option) any later version.
-#
-# StereoPi tutorial is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with StereoPi tutorial.
-# If not, see <http://www.gnu.org/licenses/>.
-#
-#          <><><> SPECIAL THANKS: <><><>
-#
-# Thanks to Adrian and http://pyimagesearch.com, as a lot of
-# code in this tutorial was taken from his lessons.
-#
-# Thanks to RPi-tankbot project: https://github.com/Kheiden/RPi-tankbot
-#
-# Thanks to rakali project: https://github.com/sthysel/rakali
-
+# TODO: IMPORTANT: Notice camera sizes and image sizes variables (I think this is for the resolution of the final
+#  images and the resolution of the image displayed as a preview.
 
 import picamera
 from picamera import PiCamera
@@ -42,7 +20,7 @@ print("You can press 'Q' to quit this script.")
 # File for captured image
 filename = './scenes/photo.png'
 
-# Camera settimgs
+# Camera settings
 cam_width = 1280
 cam_height = 480
 
