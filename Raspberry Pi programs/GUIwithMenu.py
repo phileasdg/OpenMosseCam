@@ -1,4 +1,10 @@
+# //////////////////////////////////////////////////////////////////////////////////////////////////////////////////// #
+# GENERAL TO DO LIST:
+# //////////////////////////////////////////////////////////////////////////////////////////////////////////////////// #
 # TODO: update all the comments and dependencies when the code is finished and make sure it is all correct.
+# TODO: make the current setting highlighted in the settings menu on the GUI
+# TODO: Change update_ui_display() to blit pictures or text depending on the setting
+# TODO: make the camera setup
 
 import RPi.GPIO as GPIO
 from time import sleep
@@ -38,6 +44,7 @@ def toggle_info():
     global infoOverlay
     infoOverlay = not infoOverlay
     print("infoOverlay is " + str(infoOverlay))
+    # TODO: if infoOverlay is False: hide GUI until a button is pressed.
 
 
 def settings_menu():
@@ -58,14 +65,11 @@ def settings_menu():
     pygame.draw.rect(DISPLAYSURF, WHITE, (marginX, 2 * marginY + GUIy, GUIx, 3 * marginY), 1)  # bottom rect (current setting description)
 
     for i in range(3):
-        pygame.draw.line(DISPLAYSURF, WHITE, (int(marginX + (i + 1) * x4thSettings), marginY),
-                         (int(marginX + (i + 1) * x4thSettings), GUIy + marginY), 1)  # x4ths
-        pygame.draw.line(DISPLAYSURF, WHITE, (marginX, int(marginY + i * y3rdSettings)),
-                         (GUIx + marginX, int(marginY + i * y3rdSettings)), 1)  # y3rds
+        pygame.draw.line(DISPLAYSURF, WHITE, (int(marginX + (i + 1) * x4thSettings), marginY), (int(marginX + (i + 1) * x4thSettings), GUIy + marginY), 1)  # x4ths
+        pygame.draw.line(DISPLAYSURF, WHITE, (marginX, int(marginY + i * y3rdSettings)), (GUIx + marginX, int(marginY + i * y3rdSettings)), 1)  # y3rds
         # point 2 is always GUIsize + margin because we are matching with a rect declared using xy of A followed by
         # width and height rather than xy of point D
-        pygame.draw.line(DISPLAYSURF, WHITE, (2 * marginX + GUIx, int(marginY + (i + 1) * y4thButtons)),
-                         (5 * marginX + GUIx, int(marginY + (i + 1) * y4thButtons)), 1)  # y4ths
+        pygame.draw.line(DISPLAYSURF, WHITE, (2 * marginX + GUIx, int(marginY + (i + 1) * y4thButtons)), (5 * marginX + GUIx, int(marginY + (i + 1) * y4thButtons)), 1)  # y4ths
 
     # draw settings names
     for k in sd.keys():
@@ -89,7 +93,17 @@ def gallery():
     currentDisplay = "gallery"
 
     print("you have pressed 'gallery'")
-    # change values of the thing (maybe a single function could work)
+
+    # || GUI declarations: ||
+
+    DISPLAYSURF.fill(BLACK)
+    # draw settings box
+    pygame.draw.rect(DISPLAYSURF, WHITE, (marginX, marginY, GUIx, GUIy), 1)  # settings rect
+    pygame.draw.rect(DISPLAYSURF, WHITE, (2 * marginX + GUIx, marginY, 3 * marginX, GUIy + 4 * marginY), 1)  # buttons rect
+    pygame.draw.rect(DISPLAYSURF, WHITE, (marginX, 2 * marginY + GUIy, GUIx, 3 * marginY), 1)  # bottom rect (current setting description)
+
+    for i in range(3):
+        pygame.draw.line(DISPLAYSURF, WHITE, (2 * marginX + GUIx, int(marginY + (i + 1) * y4thButtons)), (5 * marginX + GUIx, int(marginY + (i + 1) * y4thButtons)), 1)  # y4ths
 
 
 def return_to_viewfinder():
@@ -319,9 +333,9 @@ while True:  # main game loop
 
     # Menu code
     for k, v in buttons.items():
-        if GPIO.input(v) == False:
-            print("button " + str(k) + " pressed")
-            displayFunctions[currentDisplay]["Button" + str(k)]()
+        if GPIO.input(v) == False: # for any GPIO input equal to a value from the button dictionary
+            print("button " + str(k) + " pressed") # print the action taken to the terminal
+            displayFunctions[currentDisplay]["Button" + str(k)]() # run function associated with button
             update_ui_display()
             sleep(0.3)
 
