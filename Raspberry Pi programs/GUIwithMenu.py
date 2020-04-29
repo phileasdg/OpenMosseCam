@@ -5,18 +5,52 @@
 # TODO: make the current setting highlighted in the settings menu on the GUI
 # TODO: Change update_ui_display() to blit pictures or text depending on the setting
 # TODO: make the camera setup
+# TODO: make the GUI appear over the video stream at runtime and tie it to inoOverlay
 
 import RPi.GPIO as GPIO
 from time import sleep
 import pygame
 import sys
 from pygame.locals import *
+import cv2
+import numpy as np
+import time
+import picamera
+import picamera.array
 
 # //////////////////////////////////////////////////////////////////////////////////////////////////////////////////// #
 # CAMERA SETUP (PICAMERA)
 # //////////////////////////////////////////////////////////////////////////////////////////////////////////////////// #
 
 # TODO: MAKE CAMERA SETUP
+
+# Camera settings
+cam_width = 640*2
+cam_height = 480
+
+# Final image capture settings
+# scale_ratio = 1
+scale_ratio = 0.5
+
+# Camera resolution height must be dividable by 16, and width by 32
+cam_width = int((cam_width+31)/32)*32
+cam_height = int((cam_height+15)/16)*16
+print ("Camera resolution: "+str(cam_width)+" x "+str(cam_height))
+
+# Buffer for captured image settings
+img_width = int (cam_width * scale_ratio)
+img_height = int (cam_height * scale_ratio)
+capture = np.zeros((img_height, img_width, 4), dtype=np.uint8)
+print ("Scaled image resolution: "+str(img_width)+" x "+str(img_height))
+
+camera = picamera.PiCamera(stereo_mode='side-by-side',stereo_decimate=False)
+camera.resolution = (cam_width, cam_height)
+
+pygame.init()
+pygame.display.set_caption("OpenCV camera stream on Pygame")
+
+screen = pygame.display.set_mode([img_width, img_height*2])
+video = picamera.array.PiRGBArray(camera)
 
 # //////////////////////////////////////////////////////////////////////////////////////////////////////////////////// #
 # GPIO AND FUNCTIONS SETUP:
@@ -39,13 +73,11 @@ csi = 0  # defaults to ISO
 def take_picture():
     print("taking picture")
 
-
 def toggle_info():
     global infoOverlay
     infoOverlay = not infoOverlay
     print("infoOverlay is " + str(infoOverlay))
     # TODO: if infoOverlay is False: hide GUI until a button is pressed.
-
 
 def settings_menu():
 
@@ -86,8 +118,6 @@ def settings_menu():
         textRectObj = textSurfaceObj.get_rect()
         textRectObj.topleft = sd[setting][0][1]
         DISPLAYSURF.blit(textSurfaceObj, textRectObj)
-
-
 def gallery():
     global currentDisplay
     currentDisplay = "gallery"
@@ -104,8 +134,6 @@ def gallery():
 
     for i in range(3):
         pygame.draw.line(DISPLAYSURF, WHITE, (2 * marginX + GUIx, int(marginY + (i + 1) * y4thButtons)), (5 * marginX + GUIx, int(marginY + (i + 1) * y4thButtons)), 1)  # y4ths
-
-
 def return_to_viewfinder():
     global currentDisplay
     currentDisplay = "viewFinder"
@@ -115,7 +143,6 @@ def return_to_viewfinder():
     # || GUI declarations: ||
     # TODO: have it draw the image from the viewfinder over the display
     DISPLAYSURF.fill(BLACK) # TODO: Replace with camera overlay
-    draw_ui_background()
 
 
 def next_up():
@@ -135,8 +162,6 @@ def next_up():
 
     # || GUI declarations: ||
     settings_menu()
-
-
 def next_down():
     if currentDisplay == "settingsMenu":
         if 0 < scvil[csi] <= len(sd[sl[csi]][1]):
@@ -151,8 +176,6 @@ def next_down():
 
     # || GUI declarations: ||
     settings_menu()
-
-
 def change_setting():
     global csi
     if 0 <= csi < 11:  # between 0 and highest index in settingsList (9 for now)
@@ -162,10 +185,8 @@ def change_setting():
     print("you have pressed 'change selected setting' \nthe new setting is " + sl[csi])
     # go down to change the setting
 
-
 def delete():
     print("content deleted")
-
 
 def draw_ui_background():
     pygame.draw.rect(DISPLAYSURF, WHITE, (2 * marginX + GUIx, marginY, 3 * marginX, GUIy + 4 * marginY), 1)  # buttons rect
@@ -173,12 +194,36 @@ def draw_ui_background():
     for i in range(3):
         pygame.draw.line(DISPLAYSURF, WHITE, (2 * marginX + GUIx, int(marginY + (i + 1) * y4thButtons)), (5 * marginX + GUIx, int(marginY + (i + 1) * y4thButtons)), 1)  # y4ths
 
-
 def update_ui_display():
     # button function descriptions print
     for i in range(4):
         print(displayDescriptions[currentDisplay]["Button" + str(i + 1)])
     print("please press a button:")
+
+def listen_for_button_press():
+    for k, v in buttons.items():
+        if GPIO.input(v) == False: # for any GPIO input equal to a value from the button dictionary
+            print("button " + str(k) + " pressed") # print the action taken to the terminal
+            displayFunctions[currentDisplay]["Button" + str(k)]() # run function associated with button
+            update_ui_display()
+            sleep(0.3)
+
+# def draw_camera_video_stream(camera_mode, camera_scale, camera_translate):
+def draw_camera_video_stream():
+    for frameBuf in camera.capture_continuous(video, format="rgb", use_video_port=True):
+
+        frame = np.rot90(frameBuf.array)
+        frame = cv2.resize(frame, (img_height, img_width))
+
+        video.truncate(0)
+        frame = pygame.surfarray.make_surface(frame)
+        screen.fill([0, 0, 0])
+        screen.blit(frame, (0, 0))
+        pygame.display.update()
+        break
+
+        # TODO: if a button is pressed, break the loop and do what the button says.
+
 
 # //////////////////////////////////////////////////////////////////////////////////////////////////////////////////// #
 # PYGAME SETUP:
@@ -332,15 +377,14 @@ while True:  # main game loop
     # game code here:
 
     # Menu code
-    for k, v in buttons.items():
-        if GPIO.input(v) == False: # for any GPIO input equal to a value from the button dictionary
-            print("button " + str(k) + " pressed") # print the action taken to the terminal
-            displayFunctions[currentDisplay]["Button" + str(k)]() # run function associated with button
-            update_ui_display()
-            sleep(0.3)
+    listen_for_button_press()
+
+    if currentDisplay == "viewFinder":
+        draw_camera_video_stream()
 
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
+            cv2.destroyAllWindows()
             sys.exit()
     pygame.display.update()

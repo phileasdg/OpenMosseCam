@@ -25,7 +25,8 @@ cam_width = 1280
 cam_height = 480
 
 # Final image capture settings
-scale_ratio = 1
+# scale_ratio = 1
+scale_ratio = 0.5
 
 # Camera resolution height must be dividable by 16, and width by 32
 cam_width = int((cam_width+31)/32)*32
@@ -48,7 +49,7 @@ t2 = datetime.now()
 counter = 0
 avgtime = 0
 # Capture frames from the camera
-for frame in camera.capture_continuous(capture, format="bgra", use_video_port=True, resize=(img_width,img_height)):
+for frame in camera.capture_continuous(capture, format="bgra", use_video_port=True, resize=(img_width, img_height)):
     counter+=1
     t1 = datetime.now()
     timediff = t1-t2
