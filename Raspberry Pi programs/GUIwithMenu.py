@@ -17,6 +17,7 @@ import numpy as np
 import time
 import picamera
 import picamera.array
+import os
 
 # //////////////////////////////////////////////////////////////////////////////////////////////////////////////////// #
 # CAMERA SETUP (PICAMERA)
@@ -43,7 +44,9 @@ img_height = int (cam_height * scale_ratio)
 capture = np.zeros((img_height, img_width, 4), dtype=np.uint8)
 print ("Scaled image resolution: "+str(img_width)+" x "+str(img_height))
 
-camera = picamera.PiCamera(stereo_mode='side-by-side',stereo_decimate=False)
+camera = picamera.PiCamera(camera_num=0, stereo_mode='side-by-side', stereo_decimate=False, led_pin=3)
+# stereo mode options = ['none', 'side-by-side', top-bottom]
+# camera_num options = [0, 1]
 camera.resolution = (cam_width, cam_height)
 
 pygame.init()
@@ -64,6 +67,9 @@ for v in buttons.values():
 # Global variables
 infoOverlay = True
 currentDisplay = "viewFinder"
+
+# Camera program GUI assets
+setting_header_dir = r"/home/pi/Desktop/OpenMosseCam/Raspberry Pi programs/app_icons/setting_cell_icons_no_transparency"
 
 # current setting index
 csi = 0  # defaults to ISO
@@ -91,25 +97,23 @@ def settings_menu():
     # || GUI declarations: ||
 
     DISPLAYSURF.fill(BLACK)
-    # draw settings box
-    pygame.draw.rect(DISPLAYSURF, WHITE, (marginX, marginY, GUIx, GUIy), 1)  # settings rect
-    pygame.draw.rect(DISPLAYSURF, WHITE, (2 * marginX + GUIx, marginY, 3 * marginX, GUIy + 4 * marginY), 1)  # buttons rect
-    pygame.draw.rect(DISPLAYSURF, WHITE, (marginX, 2 * marginY + GUIy, GUIx, 3 * marginY), 1)  # bottom rect (current setting description)
 
-    for i in range(3):
-        pygame.draw.line(DISPLAYSURF, WHITE, (int(marginX + (i + 1) * x4thSettings), marginY), (int(marginX + (i + 1) * x4thSettings), GUIy + marginY), 1)  # x4ths
-        pygame.draw.line(DISPLAYSURF, WHITE, (marginX, int(marginY + i * y3rdSettings)), (GUIx + marginX, int(marginY + i * y3rdSettings)), 1)  # y3rds
-        # point 2 is always GUIsize + margin because we are matching with a rect declared using xy of A followed by
-        # width and height rather than xy of point D
-        pygame.draw.line(DISPLAYSURF, WHITE, (2 * marginX + GUIx, int(marginY + (i + 1) * y4thButtons)), (5 * marginX + GUIx, int(marginY + (i + 1) * y4thButtons)), 1)  # y4ths
+    # # draw settings names
+    # for k in sd.keys():
+    #     fontObj = pygame.font.Font(None, 30)  # font, font size
+    #     textSurfaceObj = fontObj.render(k, True, WHITE)  # text, anti-aliasing, text colour, bg colour
+    #     textRectObj = textSurfaceObj.get_rect()
+    #     textRectObj.topleft = sd[k][0][0]
+    #     DISPLAYSURF.blit(textSurfaceObj, textRectObj)
 
-    # draw settings names
+    # create and fill setting_titles_paths
+    setting_titles_paths = []
+    for path in os.listdir(setting_header_dir):
+        setting_titles_paths.append(os.path.join(setting_header_dir, path))
+
     for k in sd.keys():
-        fontObj = pygame.font.Font(None, 30)  # font, font size
-        textSurfaceObj = fontObj.render(k, True, WHITE)  # text, anti-aliasing, text colour, bg colour
-        textRectObj = textSurfaceObj.get_rect()
-        textRectObj.topleft = sd[k][0][0]
-        DISPLAYSURF.blit(textSurfaceObj, textRectObj)
+        img = pygame.image.load(os.path.join(setting_header_dir, (k+".PNG")))
+        DISPLAYSURF.blit(img, sd[k][0][0])
 
     # draw settings values
     for setting in sl:
@@ -118,6 +122,22 @@ def settings_menu():
         textRectObj = textSurfaceObj.get_rect()
         textRectObj.topleft = sd[setting][0][1]
         DISPLAYSURF.blit(textSurfaceObj, textRectObj)
+
+    # draw settings box
+    pygame.draw.rect(DISPLAYSURF, WHITE, (marginX, marginY, GUIx, GUIy), 1)  # settings rect
+    pygame.draw.rect(DISPLAYSURF, WHITE, (2 * marginX + GUIx, marginY, 3 * marginX, GUIy + 4 * marginY), 1)  # buttons rect
+    pygame.draw.rect(DISPLAYSURF, WHITE, (marginX, 2 * marginY + GUIy, GUIx, 3 * marginY), 1)  # bottom rect (current setting description)
+
+    # Draw grid lines
+    for i in range(3):
+        pygame.draw.line(DISPLAYSURF, WHITE, (int(marginX + (i + 1) * x4thSettings), marginY), (int(marginX + (i + 1) * x4thSettings), GUIy + marginY), 1)  # x4ths
+        pygame.draw.line(DISPLAYSURF, WHITE, (marginX, int(marginY + i * y3rdSettings)), (GUIx + marginX, int(marginY + i * y3rdSettings)), 1)  # y3rds
+        # point 2 is always GUIsize + margin because we are matching with a rect declared using xy of A followed by
+        # width and height rather than xy of point D
+        pygame.draw.line(DISPLAYSURF, WHITE, (2 * marginX + GUIx, int(marginY + (i + 1) * y4thButtons)), (5 * marginX + GUIx, int(marginY + (i + 1) * y4thButtons)), 1)  # y4ths
+
+
+
 def gallery():
     global currentDisplay
     currentDisplay = "gallery"
@@ -194,7 +214,7 @@ def draw_ui_background():
     for i in range(3):
         pygame.draw.line(DISPLAYSURF, WHITE, (2 * marginX + GUIx, int(marginY + (i + 1) * y4thButtons)), (5 * marginX + GUIx, int(marginY + (i + 1) * y4thButtons)), 1)  # y4ths
 
-def update_ui_display():
+def update_cli_display():
     # button function descriptions print
     for i in range(4):
         print(displayDescriptions[currentDisplay]["Button" + str(i + 1)])
@@ -205,7 +225,7 @@ def listen_for_button_press():
         if GPIO.input(v) == False: # for any GPIO input equal to a value from the button dictionary
             print("button " + str(k) + " pressed") # print the action taken to the terminal
             displayFunctions[currentDisplay]["Button" + str(k)]() # run function associated with button
-            update_ui_display()
+            update_cli_display()
             sleep(0.3)
 
 # def draw_camera_video_stream(camera_mode, camera_scale, camera_translate):
@@ -218,7 +238,10 @@ def draw_camera_video_stream():
         video.truncate(0)
         frame = pygame.surfarray.make_surface(frame)
         screen.fill([0, 0, 0])
-        screen.blit(frame, (0, 0))
+        screen.blit(frame, (0, int(img_height/2)))
+
+        if infoOverlay == True:
+            draw_ui_background()
         pygame.display.update()
         break
 
@@ -370,7 +393,7 @@ scvil = [
 # // Initial UI drawing:
 
 draw_ui_background()
-update_ui_display()
+update_cli_display()
 # TODO: make the update_ui_display() overwrite the current display rather than add to it.
 
 while True:  # main game loop
@@ -381,6 +404,8 @@ while True:  # main game loop
 
     if currentDisplay == "viewFinder":
         draw_camera_video_stream()
+
+
 
     for event in pygame.event.get():
         if event.type == QUIT:

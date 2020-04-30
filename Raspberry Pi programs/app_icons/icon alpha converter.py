@@ -2,9 +2,9 @@ from PIL import Image
 import os
 
 # settings
-count = 1
+count = 0
 filename = "icon.png"
-directory = r"C:\Users\phile\PycharmProjects\OpenMosseCam\Raspberry Pi programs\app_icons\New folder"
+directory = r"C:\Users\phile\PycharmProjects\OpenMosseCam\Raspberry Pi programs\app_icons\setting_cell_icons_no_transparency"
 
 # create and fill filePathList
 filePathList = []
@@ -27,6 +27,6 @@ for path in filePathList:
             newData.append(item)
 
     img.putdata(newData)
-    img.save(os.path.join(directory, (str(count) + filename)), quality=95)
+    img.save(os.path.join(directory, (os.listdir(directory)[count])), quality=100)
     count += 1
     print("finished step "+str(count-1)+" out of "+str(len(filePathList)))

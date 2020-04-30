@@ -4,7 +4,7 @@ import os
 # settings
 count = 0
 filename = "icon.png"
-directory = r"C:\Users\phile\PycharmProjects\OpenMosseCam\Raspberry Pi programs\app_icons\setting_cell_icons_no_transparency"
+directory = r"C:\Users\phile\PycharmProjects\OpenMosseCam\Raspberry Pi programs\app_icons\large_setting_cell_icons_no_transparency"
 basewidth = 130
 
 # create and fill filePathList
