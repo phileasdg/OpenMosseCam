@@ -12,6 +12,7 @@ import os
 
 # TODO: redo the menu structure and settings lookup system
 # Todo: redo the camera setup and tie it to OpenCV and the GUI
+# Todo: make it so the program only commits the setting changes when the user returns to the viewfinder
 
 # //////////////////////////////////////////////////////////////////////////////////////////////////////////////////// #
 # PROGRAM GLOBAL VARIABLE DECLARATIONS
@@ -169,11 +170,13 @@ def next_up():
             scvil[csi] = 0
         settings_menu()
         print(sl[csi] + " = " + str(sd[sl[csi]][1][scvil[csi]]))
-        # add 1 to setting value
+
+        # re-init camera if there is a user request to do so
+        if csi == 1:
+            re_init_camera_object()
 
     elif currentDisplay == "gallery":
-
-        gallery()
+        pass
 
     # update cli display
     update_cli_display("you have pressed next up")
@@ -183,15 +186,20 @@ def next_down():
     # run function and update GUI display
     if currentDisplay == "settingsMenu":
         if 0 < scvil[csi] <= len(sd[sl[csi]][1]):
+            # current setting value from index in list of values in dictionary -= 1
             scvil[csi] -= 1
+        # sets setting index value to the highest index in the list
         else:
             scvil[csi] = len(sd[sl[csi]][1]) - 1
         settings_menu()
         print(sl[csi] + " = " + str(sd[sl[csi]][1][scvil[csi]]))
 
-    elif currentDisplay == "gallery":
+        # re-init camera if there is a user request to do so
+        if csi == 1:
+            re_init_camera_object()
 
-        gallery()
+    elif currentDisplay == "gallery":
+        pass
 
     # update cli display
     update_cli_display("you have pressed next down")
@@ -227,9 +235,6 @@ def listen_for_button_press():
             print("button " + str(k) + " pressed")  # print the action taken to the terminal
             displayFunctions[currentDisplay]["Button" + str(k)][0]()  # run function associated with button
             update_cli_display()
-
-            update_camera_settings()
-
             sleep(0.3)
 
 
@@ -260,17 +265,35 @@ def draw_camera_video_stream():
         frame = pygame.surfarray.make_surface(frame)
         DISPLAYSURF.fill(BLACK)
         DISPLAYSURF.blit(frame, (frameblitX, frameblitY))
-        print(frameblitX, " ", frameblitY)
 
         if infoOverlay == True:
             draw_base_ui_overlay()
         pygame.display.update()
         break
 
-def update_camera_settings():
-    # TODO: make it also change the camera stereo_mode on picamera
+# this function should only be run when a the user requests a change to settings which must be declared during picam init
+def re_init_camera_object():
+    global resX, resY, s_mode, c_num, frameblitX, frameblitY, camera, video
+
+    # update the video frame blit coordinates
+    frameblitX, frameblitY = acmpl[scvil[1]][2]
+
+    # update the picamera object camera number and stereo mode
+    c_num = acmpl[scvil[1]][0]
+    s_mode = acmpl[scvil[1]][1]
+    camera.close()
+    camera = picamera.PiCamera(camera_num=c_num, stereo_mode=s_mode, stereo_decimate=False, led_pin=3)
+
+    # define and apply resolutions to fit active camera settings
+    camResX, camResY = sd["Resolution"][1][scvil[sl.index("Resolution")]]
+    camResX *= acmpl[scvil[1]][3][0]
+    camResY *= acmpl[scvil[1]][3][1]
+    camera.resolution = (camResX, camResY)
+
+    # re-declare video stream
+    video = picamera.array.PiRGBArray(camera)
+
     # update image rescale to fit pitft LCD
-    global resX, resY, s_mode, c_num, frameblitX, frameblitY
     resX, resY = camera.resolution
     if max(resX, resY) is resX:
         refDivider = resX / dX
@@ -279,32 +302,9 @@ def update_camera_settings():
     resX /= refDivider
     resY /= refDivider
 
-    # make sure the image appears at the right position
-    if scvil[1] == 0:
-        c_num = 0
-        s_mode = 'none'
-        pass
-    elif scvil[1] == 1:
-        c_num = 1
-        s_mode = 'none'
-    elif scvil[1] == 2:
-        c_num = 0
-        s_mode = 'side-by-side'
-        pass
-    elif scvil[1] == 3:
-        c_num = 0
-        s_mode = 'top-bottom'
-        pass
-    elif scvil[1] == 4:
-        c_num = 1
-        s_mode = 'side-by-side'
-        pass
-    elif scvil[1] == 5:
-        c_num = 1
-        s_mode = 'top-bottom'
-        pass
-
-    frameblitX, frameblitY = settingsmodedict[s_mode]
+    # update cli
+    update_cli_display(("res ", resX, resY))
+    update_cli_display(("frameblit ", frameblitX, frameblitY))
 
 
 # TODO: make and integrate the following functions:
@@ -314,8 +314,6 @@ def read_and_show_image():
 
 def read_and_show_video():
     pass
-
-
 
 # //////////////////////////////////////////////////////////////////////////////////////////////////////////////////// #
 # PYGAME GUI SETUP
@@ -342,7 +340,7 @@ y3rdSettings = (GUIy / 3)
 y4thButtons = ((GUIy + 4 * marginY) / 4)
 
 # reference resized video feed resolution values
-resY, resX = camera.resolution
+resX, resY = (640, 240) # TODO: update to be an actual test resolution
 
 # video stream frame blit coordinates
 frameblitX = 0
@@ -466,18 +464,21 @@ scvil = [
     0,  # 12) fps (TBD) TODO
 ]
 
-settingsmodedict = {
-    'none': (0, 0),
-    'side-by-side': (0, dY/4),
-    'top-bottom': (dX/4, 0)
-}
+# active camera mode properties list
+acmpl = [
+    [0, 'none', (0, 0), [1, 1]],
+    [1, 'none', (0, 0), [1, 1]],
+    [0, 'side-by-side', (0, dY/4), [2, 1]],
+    [0, 'top-bottom', (dX/4, 0), [1, 2]],
+    [1, 'side-by-side', (0, dY / 4), [2, 1]],
+    [1, 'top-bottom', (dX / 4, 0), [1, 2]],
+]
 
 # //////////////////////////////////////////////////////////////////////////////////////////////////////////////////// #
 # PYGAME MAIN MOSSECAM PROGRAM LOOP
 # //////////////////////////////////////////////////////////////////////////////////////////////////////////////////// #
 
 update_cli_display()
-update_camera_settings()
 
 while True:
     listen_for_button_press()
@@ -488,5 +489,6 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             cv2.destroyAllWindows()
+            camera.close()
             sys.exit()
     pygame.display.update()
