@@ -10,8 +10,8 @@ pygame.display.set_caption("Text display test")
 GREEN = (0, 255, 0)
 # BLUE = (0, 0, 128)
 
-fontObj = pygame.font.Font("freesansbold.ttf", 32)  # font, font size
-textSurfaceObj = fontObj.render("Hello world!", True, GREEN)  # text, anti-aliasing, text colour, bg colour
+bodyFontObj = pygame.font.Font("freesansbold.ttf", 32)  # font, font size
+textSurfaceObj = bodyFontObj.render("Hello world!", True, GREEN)  # text, anti-aliasing, text colour, bg colour
 textRectObj = textSurfaceObj.get_rect()
 textRectObj.center = (200, 150)
 

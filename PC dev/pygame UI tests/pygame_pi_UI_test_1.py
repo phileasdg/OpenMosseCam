@@ -20,13 +20,13 @@ pygame.init()
 DISPLAYSURF = pygame.display.set_mode((width, height))  # , pygame.FULLSCREEN)
 pygame.display.set_caption("Text display test")
 
-fontObj = pygame.font.Font("freesansbold.ttf", fontSize)  # font, font size
-textSurfaceObj = fontObj.render(string, True, WHITE)
+bodyFontObj = pygame.font.Font("freesansbold.ttf", fontSize)  # font, font size
+textSurfaceObj = bodyFontObj.render(string, True, WHITE)
 # text, anti-aliasing, text colour, bg colour
 textRectObj = textSurfaceObj.get_rect()
 
-textWidth = fontObj.size(string)[0]
-textHeight = fontObj.size(string)[1]
+textWidth = bodyFontObj.size(string)[0]
+textHeight = bodyFontObj.size(string)[1]
 
 textRectObj.center = (width - int(1/2*textWidth) - 10, height - int(1/2*textHeight) - 10)
 
