@@ -68,7 +68,7 @@ class userCamera(picamera.PiCamera):
 # variables (initial values)
 
 camera = userCamera()
-imgFileName = 'image_' + str(time.ctime()) + '.jpg'  # or any initial format
+vidFileName = 'image_' + str(time.ctime()) + '.jpg'  # or any initial format
 
 # Settings lists
 iso = [0, 100, 160, 200, 250, 320, 400, 500, 640, 800]  # 0 is auto ISO
@@ -118,7 +118,7 @@ button4 = Button(27)  # used as setting toggle button, runs settingSwitch functi
 
 # functions
 def shutter_button_press():
-    global imgFileName
+    global vidFileName
     imgFileName = 'image_' + str(time.ctime()) + "." + str(fileFormat[fileformatIndex])
     disable_display()
     camera.capture(os.path.join('/home/pi/Desktop/MosseCam/Pictures', imgFileName), format=fileFormat[fileformatIndex])

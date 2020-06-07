@@ -87,7 +87,7 @@ def capture():
             # videoCapture object
             imgFileName = "video " + str(time.ctime()) + "." + sd["Format"][1][scvil[10]]
             fourcc = cv2.VideoWriter_fourcc(*'MPEG')
-            video_out = cv2.VideoWriter(os.path.join(save_directory, imgFileName), fourcc, 25, (camResX, camResY))
+            video_out = cv2.VideoWriter(os.path.join(save_directory, imgFileName), fourcc, 2, (camResX, camResY))
 
         print("video recording status: ", video_recording)
 def toggle_info():
@@ -318,13 +318,6 @@ def update_camera_settings():
     Resolution = sd["Resolution"][1][scvil[8]]
     fps = sd["fps"][1][scvil[11]]
 
-    # print("setting goal values")
-    # print("shutter", Shutter)
-    # print("awb", AWB)
-    # print("Red_gain", Red_gain, 'Blue_gain', Blue_gain)
-    # print("res", Resolution)
-    # print("fps", fps)
-
     # update camera resolution
     # define and apply resolutions to fit active camera settings
     camResX, camResY = sd["Resolution"][1][scvil[8]]
@@ -338,14 +331,6 @@ def update_camera_settings():
     camera.awb_mode = AWB  # TODO: figure out why it doesn't show white balance change on video feed
     camera.awb_gains = (Red_gain, Blue_gain)  # TODO: figure out why it doesn't apply the gains
     camera.framerate = fps
-
-    # print("achieved setting values")
-    # print("shutter", camera.shutter_speed)
-    # print("awb", camera.awb_mode)
-    # print("awb gains", camera.awb_gains)
-    # print("resolution", camera.resolution)
-    # print("framerate", camera.framerate)
-
 
 # User interfaces (GUI, CLI)
 def draw_base_ui_overlay():
@@ -377,12 +362,10 @@ def draw_base_ui_overlay():
                          (5 * marginX + GUIx, int(marginY + (i + 1) * y4thButtons)), 1)  # y4ths
 def draw_camera_video_stream():
     global frameblitX, frameblitY, resX, resY, globalFrame
-    for frameBuf in camera.capture_continuous(video, format="rgb", use_video_port=True):  # TODO: switch to bgr for capture
+    for frameBuf in camera.capture_continuous(video, format="rgb", use_video_port=True):
 
-        globalFrame = np.rot90(frameBuf.array, 2)  # TODO: make sure the image is not mirrored
-
-        frame = np.rot90(frameBuf.array, 3)  # 3 = number of times the frame is rotated
-        frame = cv2.resize(frame, (int(resY), int(resX)))
+        globalFrame = cv2.cvtColor(np.flipud(frameBuf.array), cv2.COLOR_RGB2BGR)
+        frame = cv2.resize(np.rot90(frameBuf.array, 3), (int(resY), int(resX)))
 
         video.truncate(0)
         frame = pygame.surfarray.make_surface(frame)
@@ -549,9 +532,9 @@ acmpl = [
     [1, 'top-bottom', (dX / 4, 0), [1, 2]],
 ]
 
-# //////////////////////////////////////////////////////////////////////////////////////////////////////////////////// #
+# -------------------------------------------------------------------------------------------------------------------- #
 # PYGAME MAIN MOSSECAM PROGRAM LOOP
-# //////////////////////////////////////////////////////////////////////////////////////////////////////////////////// #
+# -------------------------------------------------------------------------------------------------------------------- #
 
 re_init_camera_object()
 update_camera_settings()

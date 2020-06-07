@@ -9,7 +9,7 @@ import os
 # variables (initial values)
 
 camera = PiCamera()
-imgFileName = 'image_' + str(time.ctime())  # + '.jpg'
+vidFileName = 'image_' + str(time.ctime())  # + '.jpg'
 
 # Settings lists
 
@@ -29,7 +29,7 @@ button4 = Button(27)  # used as setting toggle button, runs settingSwitch functi
 
 # functions
 def shutter_button_press():
-    global imgFileName
+    global vidFileName
     imgFileName = 'image_' + str(time.ctime())  # + '.jpg'
     camera.capture(os.path.join('/home/pi/Pictures/MosseCam/', imgFileName, '.jpg'))
     camera.stop_preview()
