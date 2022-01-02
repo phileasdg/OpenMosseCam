@@ -1,5 +1,5 @@
 # OpenMosseCam
-Open camera GUI for Raspberry pi (wip)
+Open camera GUI for Raspberry pi
 
 Installation instructions:
 The python programs in this project are designed to work out of the box with the StereoPi and Raspberry Pi compute board. Copy the programs you want onto your desired image or Raspbian and run.
